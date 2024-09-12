@@ -4,6 +4,9 @@ public class Hotel {
     private int id;
     private String name;
 
+    public Hotel(String name) {
+        this.name = name;
+    }
     public Hotel(int id, String name) {
         this.id = id;
         this.name = name;
