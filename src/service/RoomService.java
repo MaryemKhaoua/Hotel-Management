@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class RoomService {
 
-    private final RoomRepositoryImpl roomRepositoryImpl;
-    private final Scanner scanner;
+    private  RoomRepositoryImpl roomRepositoryImpl;
+    private Scanner scanner;
 
     public RoomService() {
         this.roomRepositoryImpl = new RoomRepositoryImpl();
