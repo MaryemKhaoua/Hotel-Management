@@ -3,7 +3,7 @@ import service.ClientService;
 import service.RoomService;
 import service.ReservationService;
 import service.HotelService;
-import service.StatisticService; // Importer le service de statistiques
+import service.StatisticService;
 import ui.MainMenu;
 
 import java.sql.Connection;
@@ -19,16 +19,14 @@ public class Main {
             Connection connection = ConfigCon.getInstance().getConnection();
             System.out.println("Connected to the database successfully!");
 
-            // Initialize services
             ClientService clientService = new ClientService();
             RoomService roomService = new RoomService();
             ReservationService reservationService = new ReservationService();
             HotelService hotelService = new HotelService();
-            StatisticService statisticService = new StatisticService(reservationService, roomService); // Initialize StatisticService
+            StatisticService statisticService = new StatisticService(reservationService, roomService);
 
-            // Initialize and display the main menu
-            MainMenu mainMenu = new MainMenu(clientService, roomService, reservationService, hotelService, statisticService); // Pass StatisticService to MainMenu
-            mainMenu.displayMainMenu();  // This will run the main menu loop
+            MainMenu mainMenu = new MainMenu(clientService, roomService, reservationService, hotelService, statisticService);
+            mainMenu.displayMainMenu();
 
         } catch (SQLException e) {
             System.err.println("Database connection failed: " + e.getMessage());
