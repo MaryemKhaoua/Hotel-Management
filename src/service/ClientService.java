@@ -34,9 +34,9 @@ public class ClientService {
         System.out.println("Enter Client Email: ");
         String email = scanner.nextLine();
 
-        Client client = new Client(0, name, email);
-        clientRepositoryImpl.saveClient(client);
-        System.out.println("Client saved successfully!");
+        Client client = new Client(id, name, email);
+        clientRepositoryImpl.updateClient(client);
+        System.out.println("Client updated successfully!");
     }
 
     public void deleteClient()  {

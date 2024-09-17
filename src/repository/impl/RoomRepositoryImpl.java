@@ -5,6 +5,7 @@ import bean.enums.RoomType;
 import config.ConfigCon;
 import repository.RoomRepository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,10 @@ public class RoomRepositoryImpl extends RoomRepository {
                 int id = res.getInt("id");
                 int nbrRoom = res.getInt("nbrRoom");
                 String type = res.getString("type");
+                BigDecimal basePrice = res.getBigDecimal("baseprice");
                 boolean disponibility = res.getBoolean("disponibility");
 
-                rooms.add(new Room(id, nbrRoom, RoomType.valueOf(type), disponibility));
+                rooms.add(new Room(id, nbrRoom, RoomType.valueOf(type), disponibility,basePrice));
             }
 
         } catch (SQLException sqlException) {
@@ -50,9 +52,10 @@ public class RoomRepositoryImpl extends RoomRepository {
                     int id = res.getInt("id");
                     int nbrRoom = res.getInt("nbrRoom");
                     String type = res.getString("type");
+                    BigDecimal basePrice = res.getBigDecimal("baseprice");
                     boolean disponibility = res.getBoolean("disponibility");
 
-                    room = new Room(id, nbrRoom, RoomType.valueOf(type), disponibility);
+                    room = new Room(id, nbrRoom, RoomType.valueOf(type), disponibility,basePrice);
                 }
             }
         } catch (SQLException sqlException) {
@@ -63,7 +66,7 @@ public class RoomRepositoryImpl extends RoomRepository {
 
     @Override
     public void saveRoom(Room room) {
-        String query = "INSERT INTO rooms (nbrRoom, type, disponibility) VALUES (?, ?, ?)";
+        String query = "INSERT INTO rooms (nbrroom, type, disponibility, baseprice) VALUES (?, ?, ?,?)";
 
         try (Connection cnx = ConfigCon.getInstance().getConnection();
              PreparedStatement pstmt = cnx.prepareStatement(query)) {
@@ -71,6 +74,8 @@ public class RoomRepositoryImpl extends RoomRepository {
             pstmt.setInt(1, room.getNbrRoom());
             pstmt.setString(2, room.getType().name());
             pstmt.setBoolean(3, room.isDisponibility());
+            pstmt.setBigDecimal(4, room.getBasePrice());
+
             pstmt.executeUpdate();
 
             System.out.println("Room saved successfully!");

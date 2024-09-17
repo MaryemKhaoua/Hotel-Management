@@ -4,11 +4,13 @@ import bean.Room;
 import bean.enums.RoomType;
 import repository.impl.RoomRepositoryImpl;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class RoomService {
 
-    private  RoomRepositoryImpl roomRepositoryImpl;
+    private RoomRepositoryImpl roomRepositoryImpl;
     private Scanner scanner;
 
     public RoomService() {
@@ -20,16 +22,17 @@ public class RoomService {
         System.out.println("Enter the number of the room:");
         int nbrRoom = scanner.nextInt();
         scanner.nextLine();
-
+        System.out.println("Enter the price of the room:");
+        String priceInput = scanner.nextLine();
+        BigDecimal basePrice = new BigDecimal(priceInput);
         System.out.println("Enter the type of the room (e.g., SINGLE, DOUBLE, SUITE):");
         String roomTypeStr = scanner.nextLine();
         RoomType roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
 
         boolean disponibility = true;
-        Room room = new Room(0, nbrRoom, roomType, disponibility);
+        Room room = new Room(0, nbrRoom, roomType, disponibility,basePrice);
         roomRepositoryImpl.saveRoom(room);
 
-        System.out.println("Room saved successfully!");
     }
 
     public Room updateRoom() {
@@ -88,5 +91,15 @@ public class RoomService {
             System.out.println("No room found with ID: " + roomId);
         }
         return room;
+    }
+
+    public List<Room> getAllRooms() {
+        List<Room> rooms = roomRepositoryImpl.getAllRooms();
+        if (rooms.isEmpty()) {
+            System.out.println("No rooms found.");
+        } else {
+            rooms.forEach(room -> System.out.println(room));
+        }
+        return rooms;
     }
 }

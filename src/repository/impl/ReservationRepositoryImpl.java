@@ -1,16 +1,17 @@
 package repository.impl;
 
 import bean.Reservation;
+import bean.enums.ReservationStatus;
 import bean.Client;
 import bean.Room;
 import config.ConfigCon;
 import repository.ReservationRepository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ReservationRepositoryImpl extends ReservationRepository {
     private final ClientRepositoryImpl clientRepositoryImpl;
@@ -36,12 +37,16 @@ public class ReservationRepositoryImpl extends ReservationRepository {
                 int roomId = rs.getInt("room_id");
                 LocalDate startDate = rs.getDate("start_date").toLocalDate();
                 LocalDate endDate = rs.getDate("end_date").toLocalDate();
+                String statusStr = rs.getString("status");
+                BigDecimal totalPrice = rs.getBigDecimal("total_price");
 
                 Client client = clientRepositoryImpl.getClientById(clientId);
                 Room room = roomRepositoryImpl.getRoomById(roomId);
 
                 if (client != null && room != null) {
-                    Reservation reservation = new Reservation(reservationId, client, room, startDate, endDate);
+                    Reservation reservation = new Reservation(
+                            reservationId, client, room, startDate, endDate,
+                            ReservationStatus.valueOf(statusStr), totalPrice);
                     reservations.add(reservation);
                 } else {
                     System.err.println("Client or Room not found for reservation ID: " + reservationId);
@@ -70,12 +75,16 @@ public class ReservationRepositoryImpl extends ReservationRepository {
                     int roomId = rs.getInt("room_id");
                     LocalDate startDate = rs.getDate("start_date").toLocalDate();
                     LocalDate endDate = rs.getDate("end_date").toLocalDate();
+                    String statusStr = rs.getString("status");
+                    BigDecimal totalPrice = rs.getBigDecimal("total_price");
 
                     Client client = clientRepositoryImpl.getClientById(clientId);
                     Room room = roomRepositoryImpl.getRoomById(roomId);
 
                     if (client != null && room != null) {
-                        reservation = new Reservation(reservationId, client, room, startDate, endDate);
+                        reservation = new Reservation(
+                                reservationId, client, room, startDate, endDate,
+                                ReservationStatus.valueOf(statusStr), totalPrice);
                     } else {
                         System.err.println("Client or Room not found for reservation ID: " + reservationId);
                     }
@@ -91,7 +100,7 @@ public class ReservationRepositoryImpl extends ReservationRepository {
 
     @Override
     public Reservation saveReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservations (client_id, room_id, start_date, end_date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO reservations (client_id, room_id, start_date, end_date, status, total_price) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConfigCon.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -100,6 +109,8 @@ public class ReservationRepositoryImpl extends ReservationRepository {
             ps.setInt(2, reservation.getRoom().getId());
             ps.setDate(3, Date.valueOf(reservation.getStartDate()));
             ps.setDate(4, Date.valueOf(reservation.getEndDate()));
+            ps.setString(5, reservation.getStatus().name());
+            ps.setBigDecimal(6, reservation.getTotalPrice());
 
             ps.executeUpdate();
 
@@ -120,7 +131,7 @@ public class ReservationRepositoryImpl extends ReservationRepository {
 
     @Override
     public void updateReservation(Reservation reservation) {
-        String sql = "UPDATE reservations SET client_id=?, room_id=?, start_date=?, end_date=? WHERE id=?";
+        String sql = "UPDATE reservations SET client_id=?, room_id=?, start_date=?, end_date=?, status=?, total_price=? WHERE id=?";
 
         try (Connection conn = ConfigCon.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -129,7 +140,9 @@ public class ReservationRepositoryImpl extends ReservationRepository {
             ps.setInt(2, reservation.getRoom().getId());
             ps.setDate(3, Date.valueOf(reservation.getStartDate()));
             ps.setDate(4, Date.valueOf(reservation.getEndDate()));
-            ps.setInt(5, reservation.getId());
+            ps.setString(5, reservation.getStatus().name());
+            ps.setBigDecimal(6, reservation.getTotalPrice());
+            ps.setInt(7, reservation.getId());
 
             ps.executeUpdate();
             System.out.println("Reservation updated successfully!");

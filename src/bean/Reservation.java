@@ -1,5 +1,7 @@
 package bean;
 
+import bean.enums.ReservationStatus;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Reservation {
@@ -8,20 +10,27 @@ public class Reservation {
     private Room room;
     private LocalDate startDate;
     private LocalDate endDate;
+    private ReservationStatus status;
+    private BigDecimal totalPrice;
 
-    public Reservation(Client client, Room room, LocalDate startDate, LocalDate endDate) {
+    public Reservation() {}
+
+    public Reservation(Client client, Room room, LocalDate startDate, LocalDate endDate, ReservationStatus status) {
         this.client = client;
         this.room = room;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
     }
 
-    public Reservation(int id, Client client, Room room, LocalDate startDate, LocalDate endDate) {
+    public Reservation(int id, Client client, Room room, LocalDate startDate, LocalDate endDate, ReservationStatus status, BigDecimal totalPrice) {
         this.id = id;
         this.client = client;
         this.room = room;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
+        this.totalPrice = totalPrice;
     }
 
     public int getId() {
@@ -64,6 +73,22 @@ public class Reservation {
         this.endDate = endDate;
     }
 
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +
@@ -72,6 +97,8 @@ public class Reservation {
                 ", room=" + room +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", status=" + status +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

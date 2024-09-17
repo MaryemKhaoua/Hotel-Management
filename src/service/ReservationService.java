@@ -3,11 +3,14 @@ package service;
 import bean.Client;
 import bean.Room;
 import bean.Reservation;
+import bean.enums.ReservationStatus;
 import repository.impl.ClientRepositoryImpl;
 import repository.impl.RoomRepositoryImpl;
 import repository.impl.ReservationRepositoryImpl;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
@@ -79,10 +82,16 @@ public class ReservationService {
             return null;
         }
 
-        Reservation reservation = new Reservation(client, room, startDate, endDate);
+        BigDecimal totalPrice = calculateTotalPrice(room, startDate, endDate);
+        Reservation reservation = new Reservation(0, client, room, startDate, endDate, ReservationStatus.RESERVED, totalPrice);
         reservationRepositoryImpl.saveReservation(reservation);
-        System.out.println("Reservation saved successfully!");
         return reservation;
+    }
+
+    private BigDecimal calculateTotalPrice(Room room, LocalDate startDate, LocalDate endDate) {
+        System.out.println(room);
+        long numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
+        return room.getBasePrice().multiply(BigDecimal.valueOf(numberOfDays));
     }
 
     public void updateReservation() {
@@ -115,7 +124,8 @@ public class ReservationService {
             return;
         }
 
-        Reservation reservation = new Reservation(reservationId, client, room, startDate, endDate);
+        BigDecimal totalPrice = calculateTotalPrice(room, startDate, endDate);
+        Reservation reservation = new Reservation(reservationId, client, room, startDate, endDate, ReservationStatus.RESERVED, totalPrice);
         reservationRepositoryImpl.updateReservation(reservation);
         System.out.println("Reservation updated successfully!");
     }
