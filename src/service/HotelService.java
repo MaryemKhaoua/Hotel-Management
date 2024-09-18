@@ -13,12 +13,12 @@ public class HotelService {
         this.hotelRepositoryImpl = new HotelRepositoryImpl();
         this.scanner = new Scanner(System.in);
     }
-
+//test
     public void saveHotel() {
         System.out.println("Enter Hotel name: ");
         String name = scanner.nextLine();
 
-        Hotel hotel = new Hotel(name);  // No id required, as it's a new hotel
+        Hotel hotel = new Hotel(name);
         hotelRepositoryImpl.saveHotel(hotel);
         System.out.println("Hotel saved successfully!");
     }
@@ -26,7 +26,7 @@ public class HotelService {
     public void updateHotel() {
         System.out.println("Enter Hotel id: ");
         int id = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+        scanner.nextLine();
         System.out.println("Enter Hotel name: ");
         String name = scanner.nextLine();
 

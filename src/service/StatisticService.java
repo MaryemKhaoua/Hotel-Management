@@ -16,7 +16,6 @@ public class StatisticService {
         this.roomService = roomService;
     }
 
-    // Method to count cancelled reservations
     public void countCancelledReservations() {
         List<Reservation> reservations = reservationService.getAllReservations();
         long cancelledCount = reservations.stream()
@@ -26,7 +25,6 @@ public class StatisticService {
         System.out.println("Number of cancelled reservations: " + cancelledCount);
     }
 
-    // Method to count confirmed reservations
     public void countConfirmedReservations() {
         List<Reservation> reservations = reservationService.getAllReservations();
         long confirmedCount = reservations.stream()
@@ -36,7 +34,6 @@ public class StatisticService {
         System.out.println("Number of confirmed reservations: " + confirmedCount);
     }
 
-    // Method to calculate the occupancy rate
     public void calculateOccupancyRate() {
         List<Reservation> reservations = reservationService.getAllReservations();
         List<Room> rooms = roomService.getAllRooms();
@@ -55,7 +52,6 @@ public class StatisticService {
         System.out.println("Occupancy rate: " + occupancyRate + "%");
     }
 
-    // Method to calculate total revenue from all reservations
     public void calculateTotalRevenue() {
         List<Reservation> reservations = reservationService.getAllReservations();
 
@@ -68,7 +64,6 @@ public class StatisticService {
         System.out.println("Total revenue generated: " + totalRevenue + "DH");
     }
 
-    // Method to display all statistics together
     public void displayStatisticsReport() {
         System.out.println("=== Reservation Statistics Report ===");
         countCancelledReservations();
